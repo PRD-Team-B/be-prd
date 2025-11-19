@@ -33,10 +33,10 @@ model Reviews {
   ratings           Int         
   comments          String          @db.Text()
   created_at        DateTime?       @default(now()) @db.Timestamptz(6)
-  photo_reviews     Photo_Reviews[]
+  photo_reviews     PhotoReviews[]
 }
 
-model Photo_Reviews {
+model PhotoReviews {
   id            Int         @id @default(autoincrement())
   reviews_id    Int
   link          Int
