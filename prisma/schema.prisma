@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client"
-  // output   = "../generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -33,13 +33,5 @@ model Reviews {
   ratings           Int         
   comments          String          @db.Text()
   created_at        DateTime?       @default(now()) @db.Timestamptz(6)
-  photo_reviews     PhotoReviews[]
-}
-
-model PhotoReviews {
-  id            Int         @id @default(autoincrement())
-  reviews_id    Int
-  link          Int
-  reviews       Reviews     @relation(fields: [reviews_id], references: [id])
 }
 
