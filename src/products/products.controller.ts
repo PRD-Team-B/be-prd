@@ -1,4 +1,12 @@
-import { Controller, Get, Inject, Logger, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+  Param,
+} from '@nestjs/common';
 import { Products } from '@prisma/client';
 import { ProductsServiceItf } from './products.service.interface';
 
@@ -16,7 +24,12 @@ export class ProductsController {
     try {
       return await this.productService.getOneProduct(id);
     } catch (error) {
-      this.logger.error('error', error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      this.logger.error(`Failed to get product with id ${id}`, error);
+
+      throw new InternalServerErrorException('something wrong on our side');
     }
   }
 }
