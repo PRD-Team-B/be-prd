@@ -9,5 +9,12 @@ import {
 export class ProductsRepository implements ProductsRepositoryItf {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getProduct(id: number): Promise<OutDetailProduct | null> {}
+  async getProduct(id: number): Promise<OutDetailProduct | null> {
+    return await this.prisma.products.findUnique({
+      where: {
+        id,
+      },
+      include: { reviews: true },
+    });
+  }
 }

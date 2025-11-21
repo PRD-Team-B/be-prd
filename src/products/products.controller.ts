@@ -1,17 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Inject,
-  ParseIntPipe,
-} from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { ProductsServiceItf } from './products.service.interface';
+import { Controller, Get, Inject, Param } from '@nestjs/common';
 import { Products } from '@prisma/client';
+import { ProductsServiceItf } from './products.service.interface';
 
 @Controller('products')
 export class ProductsController {
@@ -21,5 +10,11 @@ export class ProductsController {
   ) {}
 
   @Get(':id')
-  async getProduct(@Param('id') id: number): Promise<Products> {}
+  async getProduct(@Param('id') id: number): Promise<Products | undefined> {
+    try {
+      return await this.productService.getOneProduct(id);
+    } catch (error) {
+      console.error('error', error);
+    }
+  }
 }
