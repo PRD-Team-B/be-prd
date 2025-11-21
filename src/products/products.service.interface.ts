@@ -1,5 +1,5 @@
-import { Products } from "@prisma/client";
+import { Products } from '@prisma/client';
 
 export interface ProductsServiceItf {
-    getOneProduct(id: number): Promise<Products>;
+  getOneProduct(id: number): Promise<Products>;
 }
