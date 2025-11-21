@@ -7,7 +7,7 @@ export class AppController {
     @Inject('IAppService') private readonly appService: IAppService,
   ) {}
 
-  @Get()
+  @Get('health')
   getHello(): Promise<string> {
     return this.appService.getHealthCheck();
   }
