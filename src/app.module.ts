@@ -7,10 +7,10 @@ import { LoggerMiddleware } from './global/middlewares/logger.middleware';
 @Module({
   imports: [ProductsModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [{ provide: 'IAppService', useClass: AppService }],
 })
 export class AppModule {
-    configure(consumer: MiddlewareConsumer) {
+  configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

@@ -5,9 +5,10 @@ import { Products } from '@prisma/client';
 
 @Injectable()
 export class ProductsService implements ProductsServiceItf {
-  constructor(@Inject('ProductsRepositoryItf') private readonly productsRepository: ProductsRepositoryItf){}
+  constructor(
+    @Inject('ProductsRepositoryItf')
+    private readonly productsRepository: ProductsRepositoryItf,
+  ) {}
 
-  async getOneProduct(id: number): Promise<Products> {
-    
-  }
+  async getOneProduct(id: number): Promise<Products> {}
 }
