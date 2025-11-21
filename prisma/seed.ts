@@ -108,7 +108,7 @@ async function main() {
   });
 
   console.log('Seed Completed Dude!');
-  console.log(`${product1.title}, ${product2.title}`);
+  console.log(`Product: ${product1.title}, ${product2.title}`);
 }
 main()
   .then(async () => await prisma.$disconnect())
