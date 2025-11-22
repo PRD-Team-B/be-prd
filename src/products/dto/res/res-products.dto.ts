@@ -14,6 +14,9 @@ export class ProductBodyDto {
   @Type(() => Number)
   quantity: number;
   @Expose()
+  @Type(() => Number)
+  averageRating: number;
+  @Expose()
   @Type(() => Date)
   created_at: Date;
   @Expose()
