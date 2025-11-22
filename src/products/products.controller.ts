@@ -9,8 +9,11 @@ import {
 } from '@nestjs/common';
 import { Products } from '@prisma/client';
 import { ProductsServiceItf } from './products.service.interface';
+import { TransformResponse } from 'src/global/interceptors/transform-body-res.interceptor';
+import { ProductBodyDto } from './dto/res/res-products.dto';
 
 @Controller('products')
+@TransformResponse(ProductBodyDto)
 export class ProductsController {
   private logger = new Logger(ProductsController.name);
 
