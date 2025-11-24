@@ -1,98 +1,319 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Product Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A RESTful API backend built with NestJS for managing products and reviews. This application provides endpoints to retrieve product details along with customer reviews and calculated average ratings.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+- **Product Management**: Retrieve product details with reviews
+- **Review System**: View product reviews with ratings
+- **Average Rating Calculation**: Automatically calculates average ratings from reviews
+- **Request Logging**: Comprehensive logging middleware for all requests
+- **Rate Limiting**: Built-in rate limiting (10 requests per minute per IP)
+- **Input Validation**: Automatic request validation using class-validator
+- **Response Transformation**: Standardized API response format
+- **Database Transactions**: Ensures data consistency with Prisma transactions
+- **CORS Support**: Configured for cross-origin requests
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🛠️ Tech Stack
 
-## Project setup
+- **Framework**: [NestJS](https://nestjs.com/) 11.x
+- **Language**: TypeScript 5.7
+- **Database**: PostgreSQL
+- **ORM**: Prisma 6.16
+- **Package Manager**: pnpm
+- **Validation**: class-validator, class-transformer
+- **Testing**: Jest
 
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (v18 or higher) - [Download](https://nodejs.org/)
+- **pnpm** - Package manager - [Installation Guide](https://pnpm.io/installation)
+- **PostgreSQL** (v12 or higher) - [Download](https://www.postgresql.org/download/)
+
+## 🔧 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd be-prd
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up environment variables**
+   
+   Create a `.env` file in the root directory:
+   ```env
+   DATABASE_URL="postgresql://username:password@localhost:5432/database_name?schema=public"
+   DIRECT_URL="postgresql://username:password@localhost:5432/database_name?schema=public"
+   PORT=3000
+   NODE_ENV=development
+   ```
+   
+   Replace the placeholders with your actual PostgreSQL credentials:
+   - `username`: Your PostgreSQL username
+   - `password`: Your PostgreSQL password
+   - `database_name`: Your database name
+   - `localhost:5432`: Your PostgreSQL host and port (adjust if different)
+
+4. **Set up the database**
+   
+   Generate Prisma Client:
+   ```bash
+   npx prisma generate
+   ```
+   
+   Run database migrations:
+   ```bash
+   npx prisma migrate deploy
+   ```
+   
+   Or for development (creates new migration if schema changed):
+   ```bash
+   npx prisma migrate dev
+   ```
+
+5. **Seed the database (Optional)**
+   
+   Populate the database with sample data:
+   ```bash
+   pnpm run seed
+   ```
+   
+   This will create sample products with reviews for testing.
+
+## 🏃 Running the Application
+
+### Development Mode
 ```bash
-$ pnpm install
+pnpm run start:dev
+```
+Runs the app in watch mode with hot-reload enabled.
+
+### Production Mode
+```bash
+# Build the application
+pnpm run build
+
+# Run the production build
+pnpm run start:prod
 ```
 
-## Compile and run the project
-
+### Standard Start
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+pnpm run start
 ```
 
-## Run tests
+The application will be available at `http://localhost:3000` (or the port specified in your `.env` file).
 
-```bash
-# unit tests
-$ pnpm run test
+## 📚 API Endpoints
 
-# e2e tests
-$ pnpm run test:e2e
+### Health Check
+```
+GET /health
+```
+Returns the health status of the application.
 
-# test coverage
-$ pnpm run test:cov
+**Response:**
+```json
+{
+  "message": "success",
+  "data": "OK"
+}
 ```
 
-## Deployment
+### Get Product by ID
+```
+GET /products/:id
+```
+Retrieves a product by its ID, including all reviews and the calculated average rating.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+**Parameters:**
+- `id` (number, required): Product ID
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+**Response:**
+```json
+{
+  "message": "success",
+  "data": {
+    "id": 1,
+    "title": "Kebaya",
+    "photo": "https://example.com/image.jpg",
+    "quantity": 10,
+    "averageRating": 4.4,
+    "created_at": "2022-08-01T08:10:00.000Z",
+    "updated_at": "2022-08-01T08:10:00.000Z",
+    "reviews": [
+      {
+        "id": 1,
+        "products_id": 1,
+        "name": "Sarah",
+        "ratings": 5,
+        "comments": "The lace quality is amazing!",
+        "created_at": "2024-11-01T08:10:00.000Z"
+      }
+    ]
+  }
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+**Error Responses:**
+- `404 Not Found`: Product with the given ID does not exist
+- `400 Bad Request`: Too many requests (rate limit exceeded)
+- `500 Internal Server Error`: Server-side error
 
-## Resources
+## 📁 Project Structure
 
-Check out a few resources that may come in handy when working with NestJS:
+```
+be-prd/
+├── prisma/
+│   ├── migrations/          # Database migrations
+│   ├── schema.prisma        # Prisma schema definition
+│   ├── seed.ts              # Database seeding script
+│   ├── prisma.module.ts     # Prisma module
+│   └── prisma.service.ts    # Prisma service
+├── src/
+│   ├── global/
+│   │   ├── interceptors/    # Response transformation interceptors
+│   │   └── middlewares/     # Global middlewares (logger, rate-limit)
+│   ├── products/
+│   │   ├── dto/             # Data Transfer Objects
+│   │   ├── products.controller.ts
+│   │   ├── products.service.ts
+│   │   ├── products.repository.ts
+│   │   └── *.interface.ts   # TypeScript interfaces
+│   ├── app.module.ts        # Root application module
+│   ├── app.controller.ts    # Root controller
+│   └── main.ts              # Application entry point
+├── test/                    # E2E tests
+├── package.json
+└── README.md
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 🏗️ Architecture
 
-## Support
+The project follows a **layered architecture** pattern:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **Controller Layer**: Handles HTTP requests and responses
+- **Service Layer**: Contains business logic
+- **Repository Layer**: Handles data access and database operations
+- **Interface-based Design**: Uses TypeScript interfaces for dependency injection
 
-## Stay in touch
+### Key Design Patterns
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- **Dependency Injection**: All services use NestJS DI with interface tokens
+- **Repository Pattern**: Separates data access logic from business logic
+- **DTO Pattern**: Uses Data Transfer Objects for request/response transformation
+- **Middleware Pattern**: Global middlewares for cross-cutting concerns
 
-## License
+## 🧪 Testing
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Run Unit Tests
+```bash
+pnpm run test
+```
+
+### Run Tests in Watch Mode
+```bash
+pnpm run test:watch
+```
+
+### Run E2E Tests
+```bash
+pnpm run test:e2e
+```
+
+### Generate Test Coverage
+```bash
+pnpm run test:cov
+```
+
+## 📝 Available Scripts
+
+| Script | Description |
+|--------|-------------|
+| `pnpm run build` | Compile TypeScript to JavaScript |
+| `pnpm run start` | Start the application |
+| `pnpm run start:dev` | Start in development mode with watch |
+| `pnpm run start:debug` | Start in debug mode |
+| `pnpm run start:prod` | Start production build |
+| `pnpm run lint` | Run ESLint and fix issues |
+| `pnpm run format` | Format code with Prettier |
+| `pnpm run test` | Run unit tests |
+| `pnpm run test:watch` | Run tests in watch mode |
+| `pnpm run test:cov` | Run tests with coverage |
+| `pnpm run test:e2e` | Run end-to-end tests |
+| `pnpm run seed` | Seed the database with sample data |
+
+## 🔒 Security Features
+
+- **Rate Limiting**: 10 requests per minute per IP address
+- **Input Validation**: Automatic validation of request data
+- **CORS**: Configured for specific origins (`localhost:3000`, `localhost:8080`)
+- **Error Handling**: Comprehensive error handling with proper HTTP status codes
+
+## 🗄️ Database Schema
+
+### Products Table
+- `id` (Primary Key)
+- `title` (VARCHAR 100)
+- `photo` (TEXT)
+- `description` (TEXT)
+- `quantity` (INT)
+- `created_at` (TIMESTAMP)
+- `updated_at` (TIMESTAMP)
+
+### Reviews Table
+- `id` (Primary Key)
+- `products_id` (Foreign Key → Products.id)
+- `name` (VARCHAR 100)
+- `ratings` (INT)
+- `comments` (TEXT)
+- `created_at` (TIMESTAMP)
+
+## 🔍 Prisma Commands
+
+```bash
+# Generate Prisma Client
+npx prisma generate
+
+# Create a new migration
+npx prisma migrate dev --name migration_name
+
+# Apply migrations
+npx prisma migrate deploy
+
+# Open Prisma Studio (Database GUI)
+npx prisma studio
+
+# Reset database (⚠️ deletes all data)
+npx prisma migrate reset
+```
+
+## 🐛 Troubleshooting
+
+### Database Connection Issues
+- Verify PostgreSQL is running: `pg_isready` or check your PostgreSQL service
+- Check your `.env` file has correct `DATABASE_URL` and `DIRECT_URL`
+- Ensure the database exists: `CREATE DATABASE database_name;`
+
+### Port Already in Use
+- Change the `PORT` in your `.env` file
+- Or kill the process using the port (Windows: `netstat -ano | findstr :3000`)
+
+### Prisma Client Not Generated
+- Run `npx prisma generate` after schema changes
+- Ensure `DATABASE_URL` is set correctly
+
+## 📄 License
+
+This project is private and unlicensed.
+
+## 👥 Contributing
+
+This is created by Salman Althof and Indra Nurfauzi as part of Team B.
