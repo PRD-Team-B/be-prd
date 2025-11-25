@@ -60,7 +60,7 @@ describe('ProductsRepository - getProduct()', () => {
 
     afterEach(() => jest.clearAllMocks());
 
-    test('should return product with average rating', async () => {
+    test('test getProduct return detail product', async () => {
         prismaMock.$transaction.mockResolvedValue([
             mockProduct,
             mockAvg
@@ -75,14 +75,25 @@ describe('ProductsRepository - getProduct()', () => {
         });
 
         expect(prismaMock.$transaction).toHaveBeenCalledWith([
-        prismaMock.products.findUnique({
-            where: { id: 1 },
-            include: { reviews: true }
-        }),
-        prismaMock.reviews.aggregate({
-            _avg: { ratings: true },
-            where: { products_id: 1 }
-        })
+            prismaMock.products.findUnique({
+                where: { id: 1 },
+                include: { reviews: true }
+            }),
+            prismaMock.reviews.aggregate({
+                _avg: { ratings: true },
+                where: { products_id: 1 }
+            })
         ]);
     });
+
+    test('test getProduct return null', async () => {
+        prismaMock.$transaction.mockResolvedValue([undefined, undefined]);
+
+        const result = await repository.getProduct(12);
+
+        expect(prismaMock.$transaction).toHaveBeenCalled();
+        expect(result).toEqual(null)
+
+        expect(prismaMock.$transaction).toHaveBeenCalledWith([undefined, undefined])
+    })
 });
