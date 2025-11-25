@@ -1,4 +1,4 @@
-import { CustomExceptionGen } from "src/global/exception/exception.general";
+import { CustomExceptionGen } from "../../global/exception/exception.general";
 
 export class ProductNotFoundException extends CustomExceptionGen {
     constructor(message: string = 'Product Not Found') {
