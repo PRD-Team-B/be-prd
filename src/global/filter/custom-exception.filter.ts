@@ -2,7 +2,7 @@ import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from "@nestjs/commo
 import { DatabaseException } from "../exception/database-exception";
 import { CustomExceptionGen } from "../exception/exception.general";
 import { HttpAdapterHost } from "@nestjs/core";
-import { ProductNotFoundException } from "src/products/exception/product-notFound-exception";
+import { ProductNotFoundException } from "../../products/exception/product-notFound-exception";
 
 @Catch(CustomExceptionGen)
 export class ExceptionFilterGen implements ExceptionFilter {

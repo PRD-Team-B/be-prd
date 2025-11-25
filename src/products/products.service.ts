@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Products } from '@prisma/client';
 import { ProductsRepositoryItf } from './products.repository.interface';
 import { ProductsServiceItf } from './products.service.interface';
+import { ProductNotFoundException } from './exception/product-notFound-exception';
 
 @Injectable()
 export class ProductsService implements ProductsServiceItf {
@@ -13,7 +14,7 @@ export class ProductsService implements ProductsServiceItf {
   async getOneProduct(id: number): Promise<Products> {
     const data = await this.productsRepository.getProduct(id);
     if (!data) {
-      throw new NotFoundException(`Product with ID ${id} not found!`);
+      throw new ProductNotFoundException();
     }
     return data;
   }
