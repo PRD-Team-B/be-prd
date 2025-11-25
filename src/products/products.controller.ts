@@ -11,6 +11,7 @@ import { Products } from '@prisma/client';
 import { ProductsServiceItf } from './products.service.interface';
 import { TransformResponse } from 'src/global/interceptors/transform-body-res.interceptor';
 import { ProductBodyDto } from './dto/res/res-products.dto';
+import { CustomExceptionGen } from 'src/global/exception/exception.general';
 
 @Controller('products')
 @TransformResponse(ProductBodyDto)
@@ -27,7 +28,7 @@ export class ProductsController {
     try {
       return await this.productService.getOneProduct(id);
     } catch (error) {
-      if (error instanceof NotFoundException) {
+      if (error instanceof CustomExceptionGen) {
         throw error;
       }
       throw new InternalServerErrorException('something wrong on our side');
