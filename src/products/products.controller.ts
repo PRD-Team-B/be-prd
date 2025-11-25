@@ -4,14 +4,13 @@ import {
   Inject,
   InternalServerErrorException,
   Logger,
-  NotFoundException,
   Param,
 } from '@nestjs/common';
 import { Products } from '@prisma/client';
 import { ProductsServiceItf } from './products.service.interface';
-import { TransformResponse } from 'src/global/interceptors/transform-body-res.interceptor';
+import { TransformResponse } from '../global/interceptors/transform-body-res.interceptor';
 import { ProductBodyDto } from './dto/res/res-products.dto';
-import { CustomExceptionGen } from 'src/global/exception/exception.general';
+import { CustomExceptionGen } from '../global/exception/exception.general';
 
 @Controller('products')
 @TransformResponse(ProductBodyDto)
