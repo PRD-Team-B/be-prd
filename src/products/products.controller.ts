@@ -30,8 +30,6 @@ export class ProductsController {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      this.logger.error(`Failed to get product with id ${id}`, error);
-
       throw new InternalServerErrorException('something wrong on our side');
     }
   }
