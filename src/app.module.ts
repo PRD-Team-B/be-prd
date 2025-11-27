@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { LoggerMiddleware } from './global/middlewares/logger.middleware';
-import { PrismaModule } from 'prisma/prisma.module';
+import { PrismaModule } from '../prisma/prisma.module';
 import { RateLimitMiddleware } from './global/middlewares/rate-limit.middleware';
 
 @Module({
