@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsController } from './products.controller';
-import { ProductsService } from './products.service';
 import { ProductsServiceItf } from './products.service.interface';
 import { CustomExceptionGen } from '../global/exception/exception.general';
+import { InternalServerErrorException } from '@nestjs/common';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -70,5 +70,12 @@ describe('ProductsController', () => {
     const result = controller.getProduct(12);
     expect(result).rejects.toThrow(CustomExceptionGen);
     expect(service.getOneProduct).toHaveBeenCalledWith(12)
-  })
+  });
+  
+  test('getProduct catch default error (InternalServerErrorException)', async () => {
+    mockService.getOneProduct.mockRejectedValue(new Error('unknown error'));
+
+    await expect(controller.getProduct(99)).rejects.toThrow(InternalServerErrorException);
+    expect(service.getOneProduct).toHaveBeenCalledWith(99);
+  });
 });
