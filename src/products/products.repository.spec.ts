@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsRepository } from './products.repository';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ProductsRepositoryItf } from './products.repository.interface';
+import { Prisma } from '@prisma/client';
+import { handlePrismaError } from '../global/utils/prisma.error.util';
+import { DatabaseException } from '../global/exception/database-exception';
 
 describe('ProductsRepository - getProduct()', () => {
     let repository: ProductsRepositoryItf;
@@ -86,6 +89,28 @@ describe('ProductsRepository - getProduct()', () => {
         ]);
     });
 
+    test('should return averageRating when rating exists', async () => {
+        prismaMock.$transaction.mockResolvedValue([
+            mockProduct,
+            { _avg: { ratings: 4.4 }}
+        ]);
+
+        const result = await repository.getProduct(1);
+
+        expect(result?.averageRating).toBe(4.4);
+    });
+
+    test('should return 0 when avg rating is null', async () => {
+        prismaMock.$transaction.mockResolvedValue([
+            mockProduct,
+            { _avg: { ratings: null }}
+        ]);
+
+        const result = await repository.getProduct(1);
+
+        expect(result?.averageRating).toBe(0);
+    });
+
     test('test getProduct return null', async () => {
         prismaMock.$transaction.mockResolvedValue([undefined, undefined]);
 
@@ -95,5 +120,58 @@ describe('ProductsRepository - getProduct()', () => {
         expect(result).toEqual(null)
 
         expect(prismaMock.$transaction).toHaveBeenCalledWith([undefined, undefined])
-    })
+    });
+
+    test('should throw DatabaseException for P2025', async () => {
+        const prismaErrorP2025 = {
+            code: 'P2025',
+            message: 'Record not found',
+            clientVersion: '1',
+            meta: {},
+            __proto__: Prisma.PrismaClientKnownRequestError.prototype,
+        };
+
+        prismaMock.$transaction.mockRejectedValue(prismaErrorP2025);
+        await expect(repository.getProduct(99)).rejects.toThrow(new DatabaseException('data in database not found'));
+    });
+
+    test('should throw generic known request error', async () => {
+        const prismaError = {
+            code: 'P1002',
+            message: 'Timeout reached',
+            clientVersion: '1',
+            meta: {},
+            __proto__: Prisma.PrismaClientKnownRequestError.prototype,
+        };
+
+        prismaMock.$transaction.mockRejectedValue(prismaError);
+        await expect(repository.getProduct(1)).rejects.toThrow(new DatabaseException('Database error: P1002 - Timeout reached'));
+    });
+
+    test('should throw initialization error', async () => {
+        const initError = {
+        message: 'Connection failed',
+        __proto__: Prisma.PrismaClientInitializationError.prototype
+        };
+
+        prismaMock.$transaction.mockRejectedValue(initError);
+        await expect(repository.getProduct(1)).rejects.toThrow(new DatabaseException('Database connection failed: Connection failed'));
+    });
+
+    test('should throw validation error', async () => {
+        const validationError = {
+        message: 'Invalid query',
+        __proto__: Prisma.PrismaClientValidationError.prototype
+        };
+
+        prismaMock.$transaction.mockRejectedValue(validationError);
+        await expect(repository.getProduct(1)).rejects.toThrow(new DatabaseException('Invalid database query: Invalid query'));
+    });
+
+    test('handlePrismaError for Postgres native error', async () => {
+        const pgError = { code: '42P01', message: 'table does not exist' };
+
+        prismaMock.$transaction.mockRejectedValue(pgError);
+        await expect(repository.getProduct(1)).rejects.toThrow(/Postgres error: 42P01/);
+    });
 });
