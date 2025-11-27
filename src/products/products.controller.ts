@@ -5,6 +5,7 @@ import {
   InternalServerErrorException,
   Logger,
   Param,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { Products } from '@prisma/client';
 import { ProductsServiceItf } from './products.service.interface';
@@ -23,7 +24,7 @@ export class ProductsController {
   ) {}
 
   @Get(':id')
-  async getProduct(@Param('id') id: number): Promise<Products | undefined> {
+  async getProduct(@Param('id', ParseIntPipe) id: number): Promise<Products | undefined> {
     try {
       return await this.productService.getOneProduct(id);
     } catch (error) {
