@@ -18,14 +18,18 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:8080', 'https://fe-prd-testing-production.up.railway.app'],
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:8080',
+      'https://fe-prd-production.up.railway.app',
+    ],
+    methods: ['GET'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true,
   });
 
   const httpAdapterHost = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new ExceptionFilterGen(httpAdapterHost))
+  app.useGlobalFilters(new ExceptionFilterGen(httpAdapterHost));
 
   await app.listen(process.env.PORT ?? 3000);
   logger.log(`Application is running on: ${await app.getUrl()}`);
