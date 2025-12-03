@@ -13,7 +13,7 @@ export class RateLimitMiddleware implements NestMiddleware {
     private request: RateLimitParam = {}
 
     private readonly windowMs = 60*1000;
-    private readonly maxRequest = 4;
+    private readonly maxRequest = 8;
     use(req: Request, res: Response, next: NextFunction){
         // if environment test, skip rate limit
         if (process.env.NODE_ENV === 'test') {
